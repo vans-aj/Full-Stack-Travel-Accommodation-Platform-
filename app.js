@@ -17,6 +17,7 @@ main().then(()=>{
 async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
 }
+app.use(express.urlencoded({extended:true}));
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname , "views"));
 app.listen(port,()=>{
@@ -28,8 +29,24 @@ app.get("/listings",async (req,res)=>{
     res.render("listing/index.ejs" , {alllist});
 })
 
+app.get("/listings/new",async (req,res)=>{
+    res.render("listing/new.ejs");
+})
+
 app.get("/listings/:id",async (req,res)=>{
-    
+    let {id} = req.params;
+    const listing = await Listing.findById(id);
+    res.render("listing/show.ejs",{listing});
+})
+
+app.get("/listings/new",async (req,res)=>{
+    res.render("listing/new.ejs");
+})
+
+app.post("/listings",async (req,res)=>{
+    let newlisting = new Listing(req.body.listing);
+    await newlisting.save();
+    res.redirect("/listings");
 })
 // app.get("/testlisting",async (req,res)=>{
 //     let list = new Listing({

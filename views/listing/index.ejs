@@ -6,10 +6,13 @@
     <title>All Listings</title>
 </head>
 <body>
+    <form method ="GET" action="/listings/new">
+        <button>create new Listing</button>
+    </form>
     <h3>All Listings</h3>
     <ul>
         <% for (let listing of alllist) { %>
-            <li><a href = "/listings<%= listing._id %>"><%= listing.title %></a></li>
+            <li><a href="/listings/<%= listing._id %>"><%= listing.title %></a></li>
         <% } %>
     </ul>
 </body>
