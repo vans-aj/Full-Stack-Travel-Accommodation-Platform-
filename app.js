@@ -6,6 +6,8 @@ const ejs = require("ejs");
 const port = 8080;
 const Listing = require("./models/listing.js");
 const path = require("path");
+const methodOverride = require("method-override");
+app.use(methodOverride("_method"));
 //conecting to mongodb
 
 main().then(()=>{
@@ -38,7 +40,11 @@ app.get("/listings/:id",async (req,res)=>{
     const listing = await Listing.findById(id);
     res.render("listing/show.ejs",{listing});
 })
-
+app.put("/listings/:id",async (req,res)=>{
+    let {id} = req.params;
+    const listing = await Listing.findByIdAndUpdate(id,{...req.body.listing});
+    res.redirect(`/listings/${id}`);
+})
 app.get("/listings/new",async (req,res)=>{
     res.render("listing/new.ejs");
 })
@@ -47,6 +53,18 @@ app.post("/listings",async (req,res)=>{
     let newlisting = new Listing(req.body.listing);
     await newlisting.save();
     res.redirect("/listings");
+})
+app.delete("/listings/:id",async (req,res)=>{
+    let {id} = req.params;
+    await Listing.findByIdAndDelete(id);
+    res.redirect("/listings");
+}
+)
+
+app.get("/listings/:id/edit",async (req , res)=>{
+    let {id} = req.params;
+    const listing = await Listing.findById(id);
+    res.render("listing/update.ejs" , {listing});
 })
 // app.get("/testlisting",async (req,res)=>{
 //     let list = new Listing({
