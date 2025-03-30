@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>creat</title>
-</head>
-<body>
+<% layout("layout/boilerplate") %>
     <form method="POST" action = "/listings/<%= listing._id %>?_method=PUT"> 
         <h3>create a new listing</h3>
         <input name = "listing[title]" value = "<%= listing.title %>" type="text">

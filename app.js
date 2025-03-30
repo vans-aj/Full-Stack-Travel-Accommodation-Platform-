@@ -8,6 +8,7 @@ const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
+const ejsMate = require("ejs-mate");
 //conecting to mongodb
 
 main().then(()=>{
@@ -22,6 +23,8 @@ async function main() {
 app.use(express.urlencoded({extended:true}));
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname , "views"));
+app.engine('ejs',ejsMate);
+app.use(express.static(path.join(__dirname , "/public")));
 app.listen(port,()=>{
     console.log("server is listening at 8080");
 });
@@ -36,17 +39,30 @@ app.get("/listings/new",async (req,res)=>{
 })
 
 app.get("/listings/:id",async (req,res)=>{
-    let {id} = req.params;
-    const listing = await Listing.findById(id);
-    res.render("listing/show.ejs",{listing});
+    try {
+        let {id} = req.params;
+        const listing = await Listing.findById(id);
+        if (!listing) {
+            return res.status(404).send("Listing not found");
+        }
+        res.render("listing/show.ejs",{listing});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 })
 app.put("/listings/:id",async (req,res)=>{
-    let {id} = req.params;
-    const listing = await Listing.findByIdAndUpdate(id,{...req.body.listing});
-    res.redirect(`/listings/${id}`);
-})
-app.get("/listings/new",async (req,res)=>{
-    res.render("listing/new.ejs");
+    try {
+        let {id} = req.params;
+        const listing = await Listing.findByIdAndUpdate(id,{...req.body.listing});
+        if (!listing) {
+            return res.status(404).send("Listing not found");
+        }
+        res.redirect(`/listings/${id}`);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 })
 
 app.post("/listings",async (req,res)=>{
@@ -54,12 +70,19 @@ app.post("/listings",async (req,res)=>{
     await newlisting.save();
     res.redirect("/listings");
 })
-app.delete("/listings/:id",async (req,res)=>{
-    let {id} = req.params;
-    await Listing.findByIdAndDelete(id);
-    res.redirect("/listings");
-}
-)
+app.delete("/listings/:id", async (req, res) => {
+    try {
+        let { id } = req.params;
+        const listing = await Listing.findByIdAndDelete(id);
+        if (!listing) {
+            return res.status(404).send("Listing not found");
+        }
+        res.redirect("/listings");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+})
 
 app.get("/listings/:id/edit",async (req , res)=>{
     let {id} = req.params;
