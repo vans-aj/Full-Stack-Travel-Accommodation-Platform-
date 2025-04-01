@@ -1,3 +1,37 @@
-body{
-    background-color: pink;
+/* navbar */
+.navbar{
+    height : 5rem;
+    background-color: white;
+}
+.fa-regular{
+    color :crimson;
+    font-size : 2rem;
+}
+/*footer*/
+.f-info{
+    text-align : center;
+    display : flex;
+    justify-content : center;
+    flex-wrap: wrap;
+    align-items: space-evenly;
+    height : 6rem;
+    background-color: #f2f2f2;
+}
+.f-info-link , .f-info-social, .f-info-brand{
+    width : 100%;
+    display : flex;
+    align-items : center;
+    justify-content : center;
+}
+.f-info-social i {
+    margin-right : 1rem;
+    font-size: 1.3rem;
+    vertical-align: middle;
+}
+.f-info-link a{
+    text-decoration: none;
+    color : #222222;
+}
+.f-info-link a:hover{
+    text-decoration: underline;
 }
