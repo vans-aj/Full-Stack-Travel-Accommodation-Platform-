@@ -29,9 +29,10 @@ app.listen(port,()=>{
     console.log("server is listening at 8080");
 });
 
-app.get("/listings",async (req,res)=>{
+app.get("/listings", async (req, res) => {
     const alllist = await Listing.find({});
-    res.render("listing/index.ejs" , {alllist});
+    console.log("Fetched Listings:", alllist);
+    res.render("listing/index.ejs", { alllist });
 })
 
 app.get("/listings/new",async (req,res)=>{

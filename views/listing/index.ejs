@@ -4,10 +4,19 @@
         <button>create new Listing</button>
     </form> -->
     <h3>All Listings</h3>
-    <ul>
-        <% for (let listing of alllist) { %>
-            <li><a href="/listings/<%= listing._id %>"><%= listing.title %></a></li>
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+      <% for (let listing of alllist) { %>
+        <div class="card col" style="width: 20rem;">
+            <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image">
+            <div class="card-body">
+              <p class="card-text">
+                 <%= listing.title %>
+                 <br>
+                 &#8377; <%= Number(listing.price || 0).toLocaleString("en-IN") %> / night
+              </p>
+            </div>
+          </div>
         <% } %>
-    </ul>
+    </div>
 </body>
 </html>
