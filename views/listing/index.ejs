@@ -6,12 +6,11 @@
             <% for (let listing of alllist) { %>
             <div class="col">
                 <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
-                    <div class="card text-bg-dark h-100">
-                        <img src="<%= listing.image.url %>" class="card-img" alt="listing image" style="height: 15rem; object-fit: cover;">
-                        <div class="card-img-overlay">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="<%= listing.image.url %>" class="card-img-top img-fluid" alt="listing image" style="height: 15rem; object-fit: cover;">
+                        <div class="card-body">
                             <h5 class="card-title"><%= listing.title %></h5>
-                            <p class="card-text"><%= listing.description %></p>
-                            <p class="card-text">&#8377; <%= Number(listing.price || 0).toLocaleString("en-IN") %> / night</p>
+                            <p class="card-text fw-semibold">&#8377; <%= Number(listing.price || 0).toLocaleString("en-IN") %> / night</p>
                         </div>
                     </div>
                 </a>
