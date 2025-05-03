@@ -2,9 +2,9 @@
 <body>
     <div class="row">
         <div class="col-8 offset-2">
-            <br><br>
+            <h3>Edit Listing</h3>
+            <pre><%= JSON.stringify(listing, null, 2) %></pre> <!-- Debugging log -->
             <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" class="needs-validation" novalidate>
-                <h3>Edit Listing</h3>
                 <div class="mb-3">
                     <label for="title" class="form-title">Title</label>
                     <input id="title" class="form-control" name="listing[title]" value="<%= listing.title %>" type="text" required>

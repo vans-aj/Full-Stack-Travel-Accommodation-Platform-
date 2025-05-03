@@ -1,20 +1,22 @@
 const mongoose = require("mongoose");
-const schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const newschema = new schema({
-    title:{
-        type: String,
-        required: true // it means mongo will not accted a document without title
-    },
+const listingSchema = new Schema({
+    title: String,
     description: String,
-    image: { 
+    image: {
         filename: String,
-        url: String
+        url: String,
     },
-    price: Number,  // Also corrected the typo "prince" -> "price"
+    price: Number,
     location: String,
-    country: String
+    country: String,
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Review",
+        },
+    ],
 });
 
-//now exporrting
-module.exports = mongoose.model("Listing", newschema);
+module.exports = mongoose.model("Listing", listingSchema);
