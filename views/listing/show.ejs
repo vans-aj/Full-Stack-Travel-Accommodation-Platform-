@@ -6,7 +6,7 @@
             <div class="card mb-3 shadow">
                 <img src="<%= listing.image.url %>" class="card-img-top img-fluid" alt="Listing image" style="height: 400px; object-fit: cover;">
                 <div class="card-body">
-                    <p><%= listing._id %></p>
+        `            <p><%= listing._id %></p>
                     <h5 class="card-title"><%= listing.title %></h5>
                     <p class="card-text"><%= listing.description %></p>
                     <ul class="list-group list-group-flush">
@@ -41,13 +41,22 @@
                         <% if (listing.reviews.length === 0) { %>
                             <p>No reviews yet.</p>
                         <% } else { %>
-                            <% listing.reviews.forEach(review => { %>
-                                <div class="border p-3 mb-3 rounded shadow-sm">
-                                    <strong>Rating:</strong> <%= review.rating %>/5
-                                    <p class="mb-0"><%= review.comment %></p>
-                                    <small class="text-muted"><%= review.createdAt.toDateString() %></small>
-                                </div>
-                            <% }) %>
+                            <div class="row">
+                                <% listing.reviews.forEach((review, index) => { %>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3 border">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">Rating: <%= review.rating %>/5</h6>
+                                                <p class="card-text"><%= review.comment %></p>
+                                                <p class="card-text"><small class="text-muted"><%= new Date(review.createdAt).toDateString() %></small></p>
+                                            </div>
+                                        </div>
+                                        <form class = "mb-3" method="POST" action = "/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                                            <button class="btn btn-sm btn-dark">Delete</button>
+                                        </form>
+                                    </div>
+                                <% }) %>
+                            </div>
                         <% } %>
                     </div>
                 </div>
