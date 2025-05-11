@@ -10,7 +10,8 @@ const ejsMate = require("ejs-mate");
 const expressError = require("./utils/expresserror.js");
 const listingrouter = require("./routes/listing.js");
 const reviewrouter = require("./routes/reviews.js");
-
+const flash = require("connect-flash");
+const session = require("express-session");
 //conecting to mongodb
 main().then(() => {
     console.log("conected to wanderlust data base");
@@ -28,15 +29,38 @@ app.set("views", path.join(__dirname, "views"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-// listening to the server at port 8080
+
+const sessionoptions = {
+    secret: "supersecret",
+    resave: false,
+    saveUninitialized: true,
+    cookie:{
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    }
+}
+
+app.get('/', (req, res) => {
+    res.send("Hello, this is the home page");
+});
 app.listen(port, () => {
     console.log("server is listening at 8080");
 });
 
+app.use(session(sessionoptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    // res.locals.error = req.flash("error");
+    next();
+}
+);
+
 // all the routes
 app.use("/listings", listingrouter);
 app.use("/listings/:id/reviews", reviewrouter);
-
 
 
 //err
@@ -44,9 +68,6 @@ app.use((err, req, res, next) => {
     const { statusCode = 500, message = "Something went wrong" } = err;
     console.error("Error:", err); // Log the error for debugging
     res.status(statusCode).render("error.ejs", { err }); // Render error page
-});
-app.get('/', (req, res) => {
-    res.send("Hello, this is the home page");
 });
 app.use("*", (req, res, next) => {
     next(new expressError("Page not found", 404)); // Handle undefined routes
