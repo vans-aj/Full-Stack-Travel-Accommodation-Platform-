@@ -10,8 +10,13 @@ const ejsMate = require("ejs-mate");
 const expressError = require("./utils/expresserror.js");
 const listingrouter = require("./routes/listing.js");
 const reviewrouter = require("./routes/reviews.js");
+const userrouter = require("./routes/user.js");
 const flash = require("connect-flash");
 const session = require("express-session");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const User = require("./models/user.js");
+
 //conecting to mongodb
 main().then(() => {
     console.log("conected to wanderlust data base");
@@ -51,6 +56,12 @@ app.listen(port, () => {
 app.use(session(sessionoptions));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     // res.locals.error = req.flash("error");
@@ -61,6 +72,7 @@ app.use((req, res, next) => {
 // all the routes
 app.use("/listings", listingrouter);
 app.use("/listings/:id/reviews", reviewrouter);
+app.use("/",userrouter);
 
 
 //err
